@@ -53,13 +53,23 @@ class ProjectController extends Controller
   public function store(ProjectFormRequest $request)
   {
     $request->validated();
-
-    // dd($request->all());
-
+    
+    
     $datas = $request->all();
+    $slugs = Project::all()->pluck('slug')->toArray();;
+
     $project = new Project;
     $project->fill($datas);
-    $project->slug = Str::of($project->title)->slug('-');
+    
+    // generate unique slug
+    $slug = Str::of($project->title)->slug('-');
+    $project->slug = $slug;
+    $c = 0;
+    while (in_array($project->slug, $slugs)){
+      $c++;
+      $project->slug = $slug . '-' . $c;
+    }
+
     $project->user_id = Auth::id();
 
 
@@ -125,8 +135,17 @@ class ProjectController extends Controller
     $request->validated();
 
     $datas = $request->all();
+    $slugs = Project::all()->pluck('slug')->toArray();;
     $project->fill($datas);
-    $project->slug = Str::of($project->title)->slug('-');
+    
+    // generate unique slug
+    $slug = Str::of($project->title)->slug('-');
+    $project->slug = $slug;
+    $c = 0;
+    while (in_array($project->slug, $slugs)){
+      $c++;
+      $project->slug = $slug . '-' . $c;
+    }
 
     if (isset($datas['image'])) {
       if ($project->image)

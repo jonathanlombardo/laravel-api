@@ -21,10 +21,21 @@ class ProjectSeeder extends Seeder
   {
     $type_ids = Type::all()->pluck('id');
     $user_ids = User::all()->pluck('id');
+    $slugs = Project::all()->pluck('slug')->toArray();
+
     for ($i = 0; $i < 150; $i++) {
       $project = new Project;
-      $project->title = $faker->unique()->sentence(3);
-      $project->slug = Str::of($project->title)->slug('-');
+      $project->title = $faker->sentence(3);
+
+      // generate unique slug
+      $slug = Str::of($project->title)->slug('-');
+      $project->slug = $slug;
+      $c = 0;
+      while (in_array($project->slug, $slugs)){
+        $c++;
+        $project->slug = $slug . '-' . $c;
+      }
+
       $project->description = $faker->paragraph(5);
       $project->git_hub = $faker->unique()->url();
       // $project->image = $faker->imageUrl(640, 480, 'preview', true, $project->slug);

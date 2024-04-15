@@ -14,8 +14,11 @@ return new class extends Migration {
   {
     Schema::create('projects', function (Blueprint $table) {
       $table->id();
-      $table->string('title', 100)->unique();
+
+    // #todo unique slug
+      $table->string('title', 100);
       $table->string('slug')->unique();
+
       $table->text('description')->nullable();
       $table->string('git_hub')->nullable()->unique();
       $table->string('image')->nullable();

@@ -94,7 +94,7 @@
       </div>
       <div class="col-4">
         <div class="text-end">
-          <img src="{{ $project->getImgUrl() }}" alt="" class="proj-img">
+          <img src="{{ $project->ImgUrl }}" alt="" class="proj-img">
           <button class="reset-img btn btn-link" type="button">Reset uploaded image</button>
         </div>
       </div>
