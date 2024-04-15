@@ -15,7 +15,7 @@ class ProjectController extends Controller
    */
   public function index()
   {
-    $projects = Project::select('id', 'title', 'user_id', 'type_id', 'image', 'description', 'git_hub', 'updated_at')
+    $projects = Project::select('id', 'slug', 'title', 'user_id', 'type_id', 'image', 'description', 'git_hub', 'updated_at')
       ->with('type:id,label,color', 'technologies:id,label,color')
       ->paginate();
 
@@ -25,25 +25,18 @@ class ProjectController extends Controller
   /**
    * Display the specified resource.
    *
-   * @param  Project $project
+   * @param  String $slug
    * @return \Illuminate\Http\Response
    */
-  public function show(Project $project)
+  public function show(String $slug)
   {
+    $project = Project::select('id', 'slug', 'title', 'user_id', 'type_id', 'image', 'description', 'git_hub', 'updated_at')
+      ->where('slug', $slug)
+      ->with('type:id,label,color', 'technologies:id,label,color')
+      ->first();
 
-    $project = [
-      'id' => $project->id,
-      'title' => $project->title,
-      'author' => $project->author,
-      'type' => $project->type,
-      'technologies' => $project->technologies,
-      'imgUrl' => $project->imgUrl,
-      'description' => $project->description,
-      'git_hub' => $project->git_hub,
-      'updated_at' => $project->updated_at,
-      'created_at' => $project->created_at,
-    ];
-
+      $project->makeHidden('user');
+      $project->makeHidden('abstract');
     return response()->json($project);
   }
 }
