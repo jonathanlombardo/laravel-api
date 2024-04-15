@@ -175,8 +175,8 @@ class ProjectController extends Controller
   {
     if ($project->user_id != Auth::id() && Auth::user()->role != 'admin')
       abort(403);
-
-    Storage::delete($project->image);
+    if($project->image)
+      Storage::delete($project->image);
     $project->delete();
     return redirect()->route('admin.projects.index')->with('messageClass', 'alert-success')->with('message', 'Project deleted');
   }
@@ -185,8 +185,8 @@ class ProjectController extends Controller
   {
     if ($project->user_id != Auth::id() && Auth::user()->role != 'admin')
       abort(403);
-
-    Storage::delete($project->image);
+    if($project->image)
+      Storage::delete($project->image);
     $project->image = null;
     $project->save();
     return redirect()->back();
