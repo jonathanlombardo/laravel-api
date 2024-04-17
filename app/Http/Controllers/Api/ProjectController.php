@@ -19,7 +19,9 @@ class ProjectController extends Controller
       ->with('type:id,label,color', 'technologies:id,label,color')
       ->paginate(12);
 
-    return response()->json($projects);
+    $success = true;
+
+    return response()->json(['projects' => $projects, 'success' => $success]);
   }
 
   /**
@@ -34,9 +36,17 @@ class ProjectController extends Controller
       ->where('slug', $slug)
       ->with('type:id,label,color', 'technologies:id,label,color')
       ->first();
+    
+    if(!$project){
+      $success = false;
+      return response()->json(['project' => $project, 'success' => $success]);
+    }
 
       $project->makeHidden('user');
       $project->makeHidden('abstract');
-    return response()->json($project);
+      
+      $success = true;
+
+    return response()->json(['project' => $project, 'success' => $success]);
   }
 }
